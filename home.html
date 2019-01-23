@@ -39,7 +39,7 @@
     const brickOffsetTop = 30;
     const brickOffsetLeft = 30
 
-    let score = 0;
+    let score = 0
 
     let bricks = []
 
@@ -82,6 +82,12 @@
             if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
               dy = -dy;
               b.status = 0;
+              score++;
+              if(score == brickRowCount*brickColumnCount) {
+                alert("YOU WIN, YOU ROCK!")
+                document.location.reload()
+                clearInterval(interval)
+              }
             }
           }
         }
@@ -92,6 +98,11 @@
 
 
     // Draw Section
+    function drawScore() {
+      ctx.font = "16px Arial";
+      ctx.fillStyle = "#0095DD"
+      ctx.fillText("Score: "+score, 8, 20)
+    }
     function drawBall() {
       ctx.beginPath();
       ctx.arc(x, y, ballRadius, 0, Math.PI*2);
@@ -125,6 +136,7 @@
     }
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawScore();
       drawBall();
       drawPaddle();
       collisionDetection();
