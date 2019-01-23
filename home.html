@@ -21,8 +21,8 @@
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
     const ballRadius = 10;
-    let x = canvas.width/2;
-    let y = canvas.height-30;
+    var x = canvas.width/2;
+    var y = canvas.height-30;
     let dx = 2;
     let dy = -2;
     const paddleHeight = 10;
@@ -75,8 +75,18 @@
         if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
-        if(y + dy > canvas.height-ballRadius || y + dy < ballRadius) {
+        if(y + dy < ballRadius) {
+          dy = -dy;
+        }
+        else if(y + dy > canvas.height-ballRadius) {
+          if(x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
+          }
+          else {
+                alert("GAME OVER");
+                document.location.reload();
+                clearInterval(interval)
+            }
         }
 
         if(rightPressed && paddleX < canvas.width-paddleWidth) {
@@ -90,7 +100,7 @@
         y += dy;
     }
 
-    setInterval(draw, 10);
+    const interval = setInterval(draw, 10);
 
     </script>
   </body>
