@@ -110,34 +110,102 @@ function drawPaddle() {
 
 
 // Challenge 1.1: Bricks colored by row
-function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      if (bricks[c][r].status === 1) {
-        const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        if (r === 0) {
-          ctx.fillStyle = '#0095DD';
-        }
-        else if (r === 1) {
-          ctx.fillStyle = '#00FF00';
-        }
-        else if (r === 2) {
-          ctx.fillStyle = '#FFA500';
-        }
-        ctx.fill();
-        ctx.fillStyle = '#0095DD'
-        ctx.closePath();
-      }
-    }
-  }
-}
+// function drawBricks() {
+//   for (let c = 0; c < brickColumnCount; c += 1) {
+//     for (let r = 0; r < brickRowCount; r += 1) {
+//       if (bricks[c][r].status === 1) {
+//         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+//         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+//         bricks[c][r].x = brickX;
+//         bricks[c][r].y = brickY;
+//         ctx.beginPath();
+//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+//         if (r === 0) {
+//           ctx.fillStyle = '#0095DD';
+//         }
+//         else if (r === 1) {
+//           ctx.fillStyle = '#00FF00';
+//         }
+//         else if (r === 2) {
+//           ctx.fillStyle = '#FFA500';
+//         }
+//         ctx.fill();
+//         ctx.fillStyle = '#0095DD'
+//         ctx.closePath();
+//       }
+//     }
+//   }
+// }
 
 // Challenge 1.2: Bricks colored by column
+// function drawBricks() {
+//   for (let c = 0; c < brickColumnCount; c += 1) {
+//     for (let r = 0; r < brickRowCount; r += 1) {
+//       if (bricks[c][r].status === 1) {
+//         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+//         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+//         bricks[c][r].x = brickX;
+//         bricks[c][r].y = brickY;
+//         ctx.beginPath();
+//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+//         if (c === 0) {
+//           ctx.fillStyle = '#0095DD';
+//         }
+//         else if (c === 1) {
+//           ctx.fillStyle = '#00FF00';
+//         }
+//         else if (c === 2) {
+//           ctx.fillStyle = '#FFA500';
+//         }
+//         else if (c === 3) {
+//           ctx.fillStyle = '#E71C25';
+//         }
+//         else if (c === 4) {
+//           ctx.fillStyle = '#E5284E';
+//         }
+//         ctx.fill();
+//         ctx.fillStyle = '#0095DD'
+//         ctx.closePath();
+//       }
+//     }
+//   }
+// }
+
+
+// Challenge 1.3: Alternate brick color
+// function drawBricks() {
+//   for (let c = 0; c < brickColumnCount; c += 1) {
+//     for (let r = 0; r < brickRowCount; r += 1) {
+//       if (bricks[c][r].status === 1) {
+//         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+//         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+//         bricks[c][r].x = brickX;
+//         bricks[c][r].y = brickY;
+//         ctx.beginPath();
+//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+//         if ((c + r) % 2 == 0) {
+//           ctx.fillStyle = '#0095DD';
+//         }
+//         else {
+//           ctx.fillStyle = '#D9393B'
+//         }
+//         ctx.fill();
+//         ctx.fillStyle = '#0095DD'
+//         ctx.closePath();
+//       }
+//     }
+//   }
+// }
+
+// Challenge 1.4: Random Colors
+
+const colorsArray = [];
+for (let i = 0; i < (brickColumnCount * brickRowCount); i++) {
+  randomColor = 'rgb(' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ',' + (Math.floor(Math.random() * 256)) + ')';
+  colorsArray.push(randomColor)
+}
+
+
 function drawBricks() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
@@ -148,31 +216,15 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        if (c === 0) {
-          ctx.fillStyle = '#0095DD';
-        }
-        else if (c === 1) {
-          ctx.fillStyle = '#00FF00';
-        }
-        else if (c === 2) {
-          ctx.fillStyle = '#FFA500';
-        }
-        else if (c === 3) {
-          ctx.fillStyle = '#E71C25';
-        }
-        else if (c === 4) {
-          ctx.fillStyle = '#E5284E';
-        }
+        ctx.fillStyle = colorsArray[(c * brickRowCount) + r]
+        console.log(colorsArray[(c * brickRowCount) + r])
         ctx.fill();
-        ctx.fillStyle = '#0095DD'
+        ctx.fillStyle = '#0095DD';
         ctx.closePath();
       }
     }
   }
 }
-
-
-
 
 
 // function drawBricks() {
