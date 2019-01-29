@@ -107,6 +107,9 @@ function drawPaddle() {
   ctx.fill();
   ctx.closePath();
 }
+
+
+// Challenge 1.1: Bricks colored by row
 function drawBricks() {
   for (let c = 0; c < brickColumnCount; c += 1) {
     for (let r = 0; r < brickRowCount; r += 1) {
@@ -117,13 +120,80 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        ctx.fillStyle = '#0095DD';
+        if (r === 0) {
+          ctx.fillStyle = '#0095DD';
+        }
+        else if (r === 1) {
+          ctx.fillStyle = '#00FF00';
+        }
+        else if (r === 2) {
+          ctx.fillStyle = '#FFA500';
+        }
         ctx.fill();
+        ctx.fillStyle = '#0095DD'
         ctx.closePath();
       }
     }
   }
 }
+
+// Challenge 1.2: Bricks colored by column
+function drawBricks() {
+  for (let c = 0; c < brickColumnCount; c += 1) {
+    for (let r = 0; r < brickRowCount; r += 1) {
+      if (bricks[c][r].status === 1) {
+        const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+        const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        if (c === 0) {
+          ctx.fillStyle = '#0095DD';
+        }
+        else if (c === 1) {
+          ctx.fillStyle = '#00FF00';
+        }
+        else if (c === 2) {
+          ctx.fillStyle = '#FFA500';
+        }
+        else if (c === 3) {
+          ctx.fillStyle = '#E71C25';
+        }
+        else if (c === 4) {
+          ctx.fillStyle = '#E5284E';
+        }
+        ctx.fill();
+        ctx.fillStyle = '#0095DD'
+        ctx.closePath();
+      }
+    }
+  }
+}
+
+
+
+
+
+// function drawBricks() {
+//   for (let c = 0; c < brickColumnCount; c += 1) {
+//     for (let r = 0; r < brickRowCount; r += 1) {
+//       if (bricks[c][r].status === 1) {
+//         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+//         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+//         bricks[c][r].x = brickX;
+//         bricks[c][r].y = brickY;
+//         ctx.beginPath();
+//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+//         ctx.fillStyle = '#0095DD';
+//         ctx.fill();
+//         ctx.closePath();
+//       }
+//     }
+//   }
+// }
+
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawScore();
