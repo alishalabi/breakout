@@ -39,19 +39,70 @@ class Paddle {
 
 // Class: Score
 class Score {
-  constructor() {
-    this.value = 0;
+  constructor(x = 8, y = 20, color = '#0095DD', font = '16px Arial', score = 0) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.font = font;
+    this.score = score;
   }
+  update() {
+    this.score += 1;
+  }
+  render(ctx) {
+    ctx.beginPath();
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText(`Score: 0`, this.x, this.y);
+
+    // ctx.fillText(`Score: ${this.score}`, 8, 20);
+    ctx.closePath();
+  }
+
 }
 
 
 // Class: Lives
+class Lives {
+  constructor(x = canvas.width-65, y = 20, color = '#0095DD', font = '16px Arial', lives = 3) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.font = font;
+    this.lives = lives;
+  }
+  update() {
+    this.lives -= 1;
+  }
+  render(ctx) {
+    ctx.beginPath();
+    ctx.font = this.font;
+    ctx.fillStyle = this.color;
+    ctx.fillText('Lives: '+this.lives, canvas.width-65, 20);
+    // ctx.fillText(`Score: ${this.score}`, 8, 20);
+    ctx.closePath();
+  }
 
+}
+
+// function drawLives() {
+//   ctx.font = '16px Arial';
+//   ctx.fillStule = ;
+//   ctx.fillText('Lives: '+this.lives, canvas.width-65, 20);
+// }
 
 // Class: Bricks
 
 
 // Class: Game
+// class Game {
+//   constructor(dx = 4, dy = -4) {
+//     this.dx = dx;
+//     this.dy = dy;
+//   }
+// }
+
+
 
 
 const canvas = document.getElementById('myCanvas');
@@ -59,6 +110,8 @@ const ctx = canvas.getContext('2d');
 
 const ball = new Ball(canvas.width / 2, canvas.height / 2);
 const paddle = new Paddle()
+const health = new Lives()
+const score = new Score()
 // const ballRadius = 10;
 // let x = canvas.width / 2;
 // let y = canvas.height - 30;
@@ -79,8 +132,8 @@ const brickOffsetTop = 30;
 const brickOffsetLeft = 30;
 
 
-let score = 0;
-let lives = 3;
+// let score = 0;
+// let lives = 3;
 
 const bricks = [];
 
@@ -128,7 +181,7 @@ function collisionDetection() {
         if (ball.x > brick.x && ball.x < brick.x + brickWidth && ball.y > brick.y && ball.y < brick.y + brickHeight) {
           ball.dy = -ball.dy;
           brick.status = 0;
-          score += 1;
+          score.update();
           if (score === brickRowCount * brickColumnCount) {
             alert('YOU WIN, YOU ROCK!')
             document.location.reload()
@@ -142,16 +195,12 @@ function collisionDetection() {
 
 
 // Draw Section
-function drawScore() {
-  ctx.font = '16px Arial';
-  ctx.fillStyle = '#0095DD';
-  ctx.fillText(`Score: ${score}`, 8, 20);
-}
-function drawLives() {
-  ctx.font = '16px Arial';
-  ctx.fillStule = '#0095DD';
-  ctx.fillText('Lives: '+lives, canvas.width-65, 20);
-}
+// function drawScore() {
+//   ctx.font = '16px Arial';
+//   ctx.fillStyle = '#0095DD';
+//   ctx.fillText(`Score: ${score}`, 8, 20);
+// }
+
 // function drawBall() {
 //   // ctx.beginPath();
 //   // ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
@@ -309,10 +358,10 @@ function draw() {
   ball.move()
   ball.render(ctx)
   paddle.render(ctx)
-  drawScore();
+  health.render(ctx)
   collisionDetection();
   drawBricks();
-  drawLives();
+  // drawLives();
 
 
   if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
@@ -324,8 +373,8 @@ function draw() {
     if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
       ball.dy = -ball.dy;
     } else {
-      lives -= 1;
-      if (!lives) {
+      health.update();
+      if (!health.lives) {
         alert('GAME OVER');
         document.location.reload();
         clearInterval(interval); // Needed for Chrome to end game
