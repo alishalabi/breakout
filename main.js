@@ -53,7 +53,7 @@ class Score {
     ctx.beginPath();
     ctx.font = this.font;
     ctx.fillStyle = this.color;
-    ctx.fillText(`Score: 0`, this.x, this.y);
+    ctx.fillText(`Score: `+this.score, this.x, this.y);
 
     // ctx.fillText(`Score: ${this.score}`, 8, 20);
     ctx.closePath();
@@ -182,7 +182,7 @@ function collisionDetection() {
           ball.dy = -ball.dy;
           brick.status = 0;
           score.update();
-          if (score === brickRowCount * brickColumnCount) {
+          if (score.score === brickRowCount * brickColumnCount) {
             alert('YOU WIN, YOU ROCK!')
             document.location.reload()
             clearInterval(interval)
@@ -359,6 +359,7 @@ function draw() {
   ball.render(ctx)
   paddle.render(ctx)
   health.render(ctx)
+  score.render(ctx)
   collisionDetection();
   drawBricks();
   // drawLives();
