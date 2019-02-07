@@ -54,13 +54,11 @@ class Score {
     ctx.font = this.font;
     ctx.fillStyle = this.color;
     ctx.fillText(`Score: `+this.score, this.x, this.y);
-
     // ctx.fillText(`Score: ${this.score}`, 8, 20);
     ctx.closePath();
   }
 
 }
-
 
 // Class: Lives
 class Lives {
@@ -85,25 +83,59 @@ class Lives {
 
 }
 
-// function drawLives() {
-//   ctx.font = '16px Arial';
-//   ctx.fillStule = ;
-//   ctx.fillText('Lives: '+this.lives, canvas.width-65, 20);
-// }
-
 // Class: Bricks
+class Brick {
+  constructor(x, y, status = 1, color = '#0095DD', width = 75, height = 20) {
+    this.x = x;
+    this.y = y;
+    this.status = status;
+    this.color = color;
+    this.width = width;
+    this.height = height;
+  }
+  render(ctx) {
+    ctx.beginPath();
+    ctx.rect(this.x, this.y, this.width, this.height);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.closePath();
+  }
+}
 
+class Bricks {
+  constructor(rowNum = 5, colNum = 5) {
+    this.rowNum = rowNum;
+    this.colNum = colNum;
+    this.padding = 10;
+    this.width = 75;
+    this.height = 20;
+    this.offsetTop = 30;
+    this.offsetLeft = 30;
+    this.bricksArr = [];
+    this.create()
+  }
 
-// Class: Game
-// class Game {
-//   constructor(dx = 4, dy = -4) {
-//     this.dx = dx;
-//     this.dy = dy;
-//   }
-// }
+  create() {
+    for (let c = 0; c < this.colNum; c+= 1) {
+      this.bricksArr[c] = []
+     for (let r = 0; r < this.rowNum; r += 1) {
+       const x = (r * (this.width + this.padding)) + this.offsetLeft;
+       const y = (c * (this.height + this.padding)) + this.offsetTop;
+       this.bricksArr[c][r] = new Brick(x, y)
+     }
+    }
+  }
 
-
-
+  render(ctx) {
+    for (let c = 0; c < this.colNum; c += 1) {
+      for(let r = 0; r < this.rowNum; r += 1) {
+        if(this.bricksArr[c][r].status === 1) {
+          this.bricksArr[c][r].render(ctx)
+        }
+      }
+    }
+  }
+}
 
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
@@ -112,6 +144,8 @@ const ball = new Ball(canvas.width / 2, canvas.height / 2);
 const paddle = new Paddle()
 const health = new Lives()
 const score = new Score()
+const brick = new Brick()
+const bricks = new Bricks()
 // const ballRadius = 10;
 // let x = canvas.width / 2;
 // let y = canvas.height - 30;
@@ -123,26 +157,26 @@ const score = new Score()
 let rightPressed = false;
 let leftPressed = false;
 
-const brickRowCount = 3;
-const brickColumnCount = 5;
-const brickWidth = 75;
-const brickHeight = 20;
-const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+// const brickRowCount = 3;
+// const brickColumnCount = 5;
+// const brickWidth = 75;
+// const brickHeight = 20;
+// const brickPadding = 10;
+// const brickOffsetTop = 30;
+// const brickOffsetLeft = 30;
 
 
 // let score = 0;
 // let lives = 3;
 
-const bricks = [];
-
-for (let c = 0; c < brickColumnCount; c += 1) {
-  bricks[c] = [];
-  for (let r = 0; r < brickRowCount; r += 1) {
-    bricks[c][r] = { x: 0, y: 0, status: 1 };
-  }
-}
+// const bricks = [];
+//
+// for (let c = 0; c < brickColumnCount; c += 1) {
+//   bricks[c] = [];
+//   for (let r = 0; r < brickRowCount; r += 1) {
+//     bricks[c][r] = { x: 0, y: 0, status: 1 };
+//   }
+// }
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
@@ -174,15 +208,15 @@ function mouseMoveHandler(e) {
 
 // Collision Detection (Brick)
 function collisionDetection() {
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      const brick = bricks[c][r];
+  for (let c = 0; c < bricks.colNum; c += 1) {
+    for (let r = 0; r < bricks.rowNum; r += 1) {
+      const brick = bricks.bricksArr[c][r];
       if (brick.status === 1) {
-        if (ball.x > brick.x && ball.x < brick.x + brickWidth && ball.y > brick.y && ball.y < brick.y + brickHeight) {
+        if (ball.x > brick.x && ball.x < brick.x + brick.width && ball.y > brick.y && ball.y < brick.y + brick.height) {
           ball.dy = -ball.dy;
           brick.status = 0;
           score.update();
-          if (score.score === brickRowCount * brickColumnCount) {
+          if (score.score === bricks.rowNum * bricks.colNum) {
             alert('YOU WIN, YOU ROCK!')
             document.location.reload()
             clearInterval(interval)
@@ -194,56 +228,34 @@ function collisionDetection() {
 }
 
 
-// Draw Section
-// function drawScore() {
-//   ctx.font = '16px Arial';
-//   ctx.fillStyle = '#0095DD';
-//   ctx.fillText(`Score: ${score}`, 8, 20);
-// }
-
-// function drawBall() {
-//   // ctx.beginPath();
-//   // ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-//   // ctx.fillStyle = '#0095DD';
-//   // ctx.fill();
-//   // ctx.closePath();
-// }
-// function drawPaddle() {
-//   ctx.beginPath();
-//   ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
-//   ctx.fillStyle = '#0095DD';
-//   ctx.fill();
-//   ctx.closePath();
-// }
-
 
 // Challenge 1.1: Bricks colored by row
-function drawBricks() {
-  for (let c = 0; c < brickColumnCount; c += 1) {
-    for (let r = 0; r < brickRowCount; r += 1) {
-      if (bricks[c][r].status === 1) {
-        const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
-        const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
-        bricks[c][r].x = brickX;
-        bricks[c][r].y = brickY;
-        ctx.beginPath();
-        ctx.rect(brickX, brickY, brickWidth, brickHeight);
-        if (r === 0) {
-          ctx.fillStyle = '#0095DD';
-        }
-        else if (r === 1) {
-          ctx.fillStyle = '#00FF00';
-        }
-        else if (r === 2) {
-          ctx.fillStyle = '#FFA500';
-        }
-        ctx.fill();
-        ctx.fillStyle = '#0095DD'
-        ctx.closePath();
-      }
-    }
-  }
-}
+// function drawBricks() {
+//   for (let c = 0; c < brickColumnCount; c += 1) {
+//     for (let r = 0; r < brickRowCount; r += 1) {
+//       if (bricks[c][r].status === 1) {
+//         const brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+//         const brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+//         bricks[c][r].x = brickX;
+//         bricks[c][r].y = brickY;
+//         ctx.beginPath();
+//         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+//         if (r === 0) {
+//           ctx.fillStyle = '#0095DD';
+//         }
+//         else if (r === 1) {
+//           ctx.fillStyle = '#00FF00';
+//         }
+//         else if (r === 2) {
+//           ctx.fillStyle = '#FFA500';
+//         }
+//         ctx.fill();
+//         ctx.fillStyle = '#0095DD'
+//         ctx.closePath();
+//       }
+//     }
+//   }
+// }
 
 // Challenge 1.2: Bricks colored by column
 // function drawBricks() {
@@ -360,8 +372,9 @@ function draw() {
   paddle.render(ctx)
   health.render(ctx)
   score.render(ctx)
+  bricks.render(ctx)
   collisionDetection();
-  drawBricks();
+  // drawBricks();
   // drawLives();
 
 
